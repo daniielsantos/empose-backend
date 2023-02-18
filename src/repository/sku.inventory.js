@@ -48,6 +48,7 @@ SkuInventoryRepository.prototype.saveSkuInventory = async function(skuInventory)
         store_id: skuInventory.store_id,
         created_at: skuInventory.created_at
     }
+    
     const inventoryQuery = format(`INSERT INTO Sku_inventory("quantity", "sku_id", "store_id", "created_at") VALUES (%L) RETURNING *`, Object.values(inventory))
     return this.db.query(inventoryQuery)
 }

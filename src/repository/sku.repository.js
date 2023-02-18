@@ -152,8 +152,10 @@ SkuRepository.prototype.saveSkuIfNotExist = async function(sku) {
         created_at: sku.created_at || new Date
     }
     if(typeof sku.id == 'string') {
+        console.log("type string")
         payload.id = 0
     }
+    // console.log("sku ", sku)
     let quer = `INSERT INTO sku
                 (name, description, active, price, product_id, store_id, created_at) 
                 SELECT $2, $3, $4, $5, $6, $7, $8 

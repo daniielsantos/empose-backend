@@ -83,7 +83,6 @@ ProductRepository.prototype.updateProduct = async function(product) {
         store_id: product.store.id,
         updated_at: product.updated_at,
     }
-    
     const query = `UPDATE Product SET "name" = $2, "description" = $3, "active" = $4, "discount" = $5, "category_id" = $6, "store_id" = $7, "updated_at" = $8 WHERE id = $1 RETURNING *`
     let res = await this.db.query(query, Object.values(payload))
     
@@ -91,8 +90,11 @@ ProductRepository.prototype.updateProduct = async function(product) {
         for await (let it of product.skus) {
             it.store = product.store
             it.product = product
-            await this.skuRepository.saveSkuIfNotExist(it)
-            await this.skuRepository.updateSku(it)
+            if(it.id == 0 || typeof it.id == 'string') {
+                await this.skuRepository.saveSku(it)
+            } else {
+                await this.skuRepository.updateSku(it)
+            }
         }
     }
     return res.rows[0]
