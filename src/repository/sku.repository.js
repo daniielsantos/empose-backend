@@ -18,7 +18,7 @@ SkuRepository.prototype.getSkus = async function(storeId) {
     const query = `SELECT s.id, s.name, s.description, s.active, s.price, s.created_at, s.updated_at,
     json_strip_nulls(json_build_object('id', p.id)) AS product,
     json_strip_nulls(json_agg(json_build_object('id', si.id, 'path', '${ipAddr}' || si.path, 'name', si.name, 'created_at', si.created_at, 'updated_at', si.updated_at))) AS images
-    = require(sku s
+    FROM sku s
     LEFT JOIN product p ON p.id = s.product_id
     LEFT JOIN sku_image si ON si.sku_id = s.id
     LEFT JOIN sku_inventory i ON i.sku_id = s.id
@@ -41,7 +41,7 @@ SkuRepository.prototype.getSku = async function(skuId, storeId) {
     const query = `SELECT s.id, s.name, s.description, s.active, s.price, s.created_at, s.updated_at,    
     json_strip_nulls(json_build_object('id', p.id)) AS product,
     json_strip_nulls(json_agg(json_build_object('id', si.id, 'path', '${ipAddr}' || si.path, 'name', si.name, 'created_at', si.created_at, 'updated_at', si.updated_at))) AS images
-    = require(sku s
+    FROM sku s
     LEFT JOIN product p ON p.id = s.product_id
     LEFT JOIN sku_image si ON si.sku_id = s.id
     WHERE s.id = $1
@@ -56,7 +56,7 @@ SkuRepository.prototype.getSku = async function(skuId, storeId) {
     s.updated_at,
     p.id
     `
-    return this.db.query(query, [skuId, storeId])    
+    return this.db.query(query, [skuId, storeId])      
 }
 
 SkuRepository.prototype.saveSku = async function(sku) {
@@ -126,7 +126,7 @@ SkuRepository.prototype.updateSku = async function(sku) {
         }
         skus.push(Object.values(pld))
     })
-    const del_skus = `DELETE = require(sku_image WHERE sku_id = $1`
+    const del_skus = `DELETE FROM sku_image WHERE sku_id = $1`
     await this.db.query(del_skus, [sku.id])
     if(skus.length){
         const addrs = format(`INSERT INTO sku_image("sku_id","name","path", "created_at", "store_id") VALUES %L RETURNING *;`, skus)
@@ -159,7 +159,7 @@ SkuRepository.prototype.saveSkuIfNotExist = async function(sku) {
                 SELECT $2, $3, $4, $5, $6, $7, $8 
                 WHERE
                     NOT EXISTS (
-                        SELECT id = require(sku WHERE id = $1
+                        SELECT id FROM sku WHERE id = $1
                     )
                 RETURNING id
                 
@@ -177,7 +177,7 @@ SkuRepository.prototype.saveSkuIfNotExist = async function(sku) {
 }
 SkuRepository.prototype.deleteSku = async function(sku) {
     const query = `DELETE 
-    = require(Sku s
+    FROM Sku s
     WHERE s.id = $1
     `
     return this.db.query(query, [sku.id])    
@@ -185,7 +185,7 @@ SkuRepository.prototype.deleteSku = async function(sku) {
 
 SkuRepository.prototype.deleteSkuByProductId = async function(productId) {
     const query = `DELETE 
-    = require(Sku s
+    FROM Sku s
     WHERE s.product_id = $1
     `
     return this.db.query(query, [productId])    
