@@ -2,4 +2,4 @@
 /coverage
 /dist
 /src/uploads
-# .env
+.env
