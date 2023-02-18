@@ -5,19 +5,22 @@ services:
     build: .
     restart: always
     container_name: empose-backend
+    hostname: app-backend
     ports:
-      - 3000: 3000
+      - 3000:3000
     environment:
-      - DB_HOST=127.0.0.1
+      - DB_HOST=192.168.15.70
       - DB_USER=empose
       - DB_PASSWORD=emp123
       - DB_DATABASE=empose
       - DB_PORT=5432
       - SERVER_PORT=3000
-    networks:
-      - external-net
+    # networks:
+    #   - external-net
+    #   - internal-net
 
-networks:
-  external-net:
-    external:
-      name: external-net-trafic
+# networks:
+#   external-net:
+#     external: true
+#   internal-net:
+#     internal: true
