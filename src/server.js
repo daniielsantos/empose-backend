@@ -13,7 +13,7 @@ const { emailSenderController } = require("./controller/email.controller")
 const { uploadsController } = require("./controller/uploads.controller")
 const { uploadFileController } = require("./controller/upload.file.controller")
 const { configController } = require("./controller/configs.controller")
-
+const {serverIp} = require("./services/ip.service")
 
 
 const app = makeApp(
@@ -29,7 +29,8 @@ const app = makeApp(
     emailSenderController,
     uploadsController,
     uploadFileController,
-    configController
+    configController,
+    serverIp
     )
 
 app.listen(3000, () => {

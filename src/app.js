@@ -3,6 +3,7 @@ require("./model/tables.model")
 const { isAuthenticated }  = require("./middleware/isAuthenticated")
 const cors = require("cors")
 const express = require("express")
+
 const app = express()
 app.use(express.json())
 app.use(cors())
@@ -20,11 +21,21 @@ function makeApp(
     emailSenderController = null,
     uploadsController = null,
     uploadFileController = null,
-    configController = null
+    configController = null,
+    serverIp = null
     ) {
 
 
     app.use('/uploads', express.static(__dirname + '/uploads'))
+    
+    app.get("/api/v1/serverip", async (req, res) => {
+        try {
+            const result = await serverIp.getIp(req.user)
+            res.send(result)            
+        } catch (e) {
+            res.status(400).send({ message: e.message })            
+        }
+    })
 
     app.get("/api/v1/users", isAuthenticated, async (req, res) => {
         try {
