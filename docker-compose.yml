@@ -35,6 +35,8 @@ services:
       - DB_DATABASE=empose
       - DB_PORT=5432
       - SERVER_PORT=3000
+    depends_on:
+      - db
     networks:
       - mynet
 

@@ -9,6 +9,7 @@ ServerIp.prototype.getIp = async function() {
         resp.on('data', function(ip) {
             if(ip)
                 ipAddr = ip + ':' + process.env.SERVER_PORT + '/'
+            console.log('ip ', ip)
         });
     });
     return ipAddr
