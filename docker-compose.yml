@@ -1,26 +1,46 @@
 version: '3.6'
 
 services:
+  db:
+    image: postgres
+    hostname: db
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: empose
+      POSTGRES_USER: empose
+      POSTGRES_PASSWORD: emp123
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - mynet
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
   app-backend:
     build: .
     restart: always
     container_name: empose-backend
-    hostname: app-backend
     ports:
       - 3000:3000
     environment:
-      - DB_HOST=192.168.15.70
+      - DB_HOST=db
       - DB_USER=empose
       - DB_PASSWORD=emp123
       - DB_DATABASE=empose
       - DB_PORT=5432
       - SERVER_PORT=3000
-    # networks:
-    #   - external-net
-    #   - internal-net
+    networks:
+      - mynet
 
-# networks:
-#   external-net:
-#     external: true
-#   internal-net:
-#     internal: true
+networks:
+  mynet:
+    driver: bridge
+
+volumes:
+  db-data:
