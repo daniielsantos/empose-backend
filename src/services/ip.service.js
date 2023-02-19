@@ -1,18 +1,30 @@
-const os = require("os")
 var http = require('http');
 
 function ServerIp() { /* TODO */ }
 
 ServerIp.prototype.getIp = async function() {
-    ipAddr = '127.0.0.1:'+ process.env.SERVER_PORT + '/'
-    http.get({'host': 'api.ipify.org', 'port': 80, 'path': '/'}, function(resp) {
-        resp.on('data', function(ip) {
-            if(ip)
-                ipAddr = ip + ':' + process.env.SERVER_PORT + '/'
-            console.log('ip ', ip)
+    // let ipAddr = '127.0.0.1:'+ process.env.SERVER_PORT + '/'
+    const options = {
+        hostname: 'api.ipify.org',
+        port: 80,
+        path: '/',
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+    };
+    return new Promise(resolve => {
+        let req = http.request(options, (res) => {
+            res.setEncoding('utf8');
+            res.on('data', (chunk) => {
+              ipAddr = chunk
+            });
+            res.on('end', () => {
+              resolve(ipAddr)
+            });
         });
-    });
-    return ipAddr
+        req.end()
+    })
 }
 
 const serverIp = new (ServerIp)
