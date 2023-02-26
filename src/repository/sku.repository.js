@@ -10,13 +10,17 @@ function SkuRepository(){
 }
 let ipAddr
 const getLocalIp = function() {
-    ipAddr = '177.96.119.231:'+ process.env.SERVER_PORT + '/'
-    http.get({'host': 'api.ipify.org', 'port': 80, 'path': '/'}, function(resp) {
-        resp.on('data', function(ip) {
-            if(ip)
-                ipAddr = ip + ':' + process.env.SERVER_PORT + '/'
+    if(!process.env.SERVER_DDNS) {
+        http.get({'host': 'api.ipify.org', 'port': 80, 'path': '/'}, function(resp) {
+            resp.on('data', function(ip) {
+                if(ip)
+                    ipAddr = ip + ':' + process.env.SERVER_PORT + '/'
+              console.log("My public IP: " + ip);
+            });
         });
-    });
+        return
+    }
+    ipAddr = process.env.SERVER_DDNS + ':' + process.env.SERVER_PORT + '/'
 }()
 
 SkuRepository.prototype.getSkus = async function(storeId) {
