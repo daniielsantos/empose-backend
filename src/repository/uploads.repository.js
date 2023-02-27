@@ -18,7 +18,7 @@ const getLocalIp = function() {
         });
         return
     }
-    ipAddr = process.env.SERVER_DDNS + ':' + process.env.SERVER_PORT + '/'
+    ipAddr = process.env.SERVER_DDNS + ':' + process.env.SERVER_PORT + '/api/v1/'
 }()
 
 UploadsRepository.prototype.getUploads = async function(storeId) {
