@@ -26,7 +26,7 @@ function makeApp(
     ) {
 
 
-    app.use('/uploads', express.static(__dirname + '/uploads'))
+    app.use('/api/v1/uploads', express.static(__dirname + '/uploads'))
     
     app.get("/api/v1/serverip", async (req, res) => {
         try {
